@@ -1,0 +1,222 @@
+version: "1.0"
+policies:
+  # =========================================================================
+  # CATEGORY 1: SITUATIONAL OVERRIDE & SEVERE MONSOON / CYCLONIC SYSTEMS
+  # =========================================================================
+  - id: "SOP-SYS-001"
+    title: "Active Low-Pressure / Heavy Monsoon Rain System Override"
+    category: "severe_weather_systems"
+    severity: "CRITICAL"
+    situational_override: true
+    applicable_activities: ["all_outdoor_activities"]
+    conditions:
+      # Heavy rainfall rate (>=15 mm/h) OR high daily precipitation accumulation (>=35 mm) OR severe storm weather codes (65, 67, 82, 95, 96, 99)
+      min_precipitation_mm: 15.0
+      min_precipitation_probability: 80
+      weather_codes: [65, 67, 82, 95, 96, 99]
+    rationale: "Regional low-pressure areas, depressions, and cyclonic circulations produce sudden localized flash flooding, road inundation, and squalls that compromise all outdoor activities regardless of specific sport or commute type."
+    mandatory_guidance:
+      - "Issue an explicit High-Severity advisory across ALL outdoor activities due to active heavy rainfall and regional low-pressure system risk."
+      - "Lead directly with the active rainfall system and precipitation intensity before giving any activity-specific notes."
+      - "Advise immediate suspension of all non-essential outdoor movements, cycling, jogging, and travel in flood-prone corridors."
+      - "Recommend monitoring national meteorological bulletins (e.g., IMD) and staying in secure shelter."
+    required_metrics_to_cite: ["precipitation", "precipitation_probability", "weather_code"]
+
+  # =========================================================================
+  # CATEGORY 2: OUTDOOR SPORTS & EXERCISE
+  # =========================================================================
+  - id: "SOP-EX-001"
+    title: "High Wind Hazard for Cyclists and Single-Track Vehicles"
+    category: "outdoor_sports_exercise"
+    severity: "HIGH"
+    situational_override: false
+    applicable_activities: ["cycling", "biking", "bike", "bicycle", "scooter", "motorcycle", "two-wheeler"]
+    conditions:
+      min_wind_speed_kmh: 40.0
+    rationale: "Sustained winds exceeding 40 km/h or strong cross-gusts exert lateral forces exceeding single-track balance limits, dramatically increasing spill and collision risks."
+    mandatory_guidance:
+      - "Flag strong winds as a direct physical safety hazard, not merely a comfort issue."
+      - "Explicitly advise against cycling, e-bikes, or riding two-wheelers in high crosswinds."
+      - "Recommend switching to enclosed four-wheel transport or rescheduling until wind speeds subside below 25 km/h."
+    required_metrics_to_cite: ["wind_speed_10m", "wind_gusts_10m"]
+
+  - id: "SOP-EX-002"
+    title: "Extreme Solar Ultraviolet (UV) Radiation Exposure"
+    category: "outdoor_sports_exercise"
+    severity: "HIGH"
+    situational_override: false
+    applicable_activities: ["running", "jogging", "cycling", "hiking", "tennis", "outdoor_workout", "exercise"]
+    conditions:
+      min_uv_index: 8.0
+    rationale: "UV index of 8.0 or above causes cellular skin damage and photokeratitis in under 15 minutes of unprotected midday exposure."
+    mandatory_guidance:
+      - "Advise against unprotected strenuous outdoor exercise during peak daytime sunlight (11:00 AM to 4:00 PM)."
+      - "Mandate broad-spectrum SPF 50+ sunscreen, UV-blocking eyewear, and protective UPF apparel if outdoors is unavoidable."
+      - "Recommend shifting training sessions to early morning or late evening."
+    required_metrics_to_cite: ["uv_index", "temperature_2m"]
+
+  - id: "SOP-EX-003"
+    title: "Extreme Ambient Heat & Exertional Heat Stroke Risk"
+    category: "outdoor_sports_exercise"
+    severity: "HIGH"
+    situational_override: false
+    applicable_activities: ["running", "marathon", "football", "soccer", "cycling", "high_intensity_exercise", "jogging"]
+    conditions:
+      min_temperature_c: 38.0
+    rationale: "Ambient temperatures at or above 38°C overwhelm human evaporative cooling during vigorous aerobic exertion, posing life-threatening heat stroke risks."
+    mandatory_guidance:
+      - "Advise against high-intensity endurance workouts in ambient heat exceeding 38°C."
+      - "Recommend indoor climate-controlled exercise or early dawn workouts."
+      - "Emphasize mandatory electrolyte hydration and immediate cessation if dizziness or cramping occurs."
+    required_metrics_to_cite: ["temperature_2m", "relative_humidity_2m"]
+
+  - id: "SOP-EX-004"
+    title: "Thunderstorm and Convective Lightning Hazard"
+    category: "outdoor_sports_exercise"
+    severity: "CRITICAL"
+    situational_override: false
+    applicable_activities: ["golf", "swimming", "boating", "hiking", "soccer", "running", "outdoor_sports"]
+    conditions:
+      weather_codes: [95, 96, 99]
+    rationale: "Convective thunderstorms present fatal cloud-to-ground lightning hazards, especially on open fields, elevated ridges, and open water bodies."
+    mandatory_guidance:
+      - "Order immediate cessation of open-field, ridge, and water-based activities."
+      - "Enforce the '30-30 lightning safety rule': seek fully enclosed shelter immediately when thunder is heard."
+      - "Prohibit sheltering under isolated tall trees or open metal canopies."
+    required_metrics_to_cite: ["weather_code", "precipitation"]
+
+  # =========================================================================
+  # CATEGORY 3: DAILY COMMUTE & TRAVEL
+  # =========================================================================
+  - id: "SOP-TRV-001"
+    title: "Precipitation Probability Transit & Commuter Delay Warning"
+    category: "daily_commute_travel"
+    severity: "MODERATE"
+    situational_override: false
+    applicable_activities: ["travel", "commute", "driving", "transit", "road_trip", "flight", "office_commute"]
+    conditions:
+      min_precipitation_probability: 70
+      max_precipitation_mm: 14.9 # Below severe flood threshold
+    rationale: "High probability of rain creates road slickness, visibility drops, and substantial vehicular congestion."
+    mandatory_guidance:
+      - "Warn commuters of likely transit delays, reduced braking friction, and traffic slow-downs."
+      - "Recommend packing waterproof rain gear and checking real-time highway/transit alerts prior to departure."
+      - "Advise allowing 25-40% additional transit buffer time."
+    required_metrics_to_cite: ["precipitation_probability", "precipitation"]
+
+  - id: "SOP-TRV-002"
+    title: "Dense Fog and Severe Visibility Restriction for Highway Driving"
+    category: "daily_commute_travel"
+    severity: "HIGH"
+    situational_override: false
+    applicable_activities: ["driving", "commute", "highway_travel", "road_trip", "trucking"]
+    conditions:
+      weather_codes: [45, 48] # Fog, depositing rime fog
+    rationale: "Dense fog reduces forward optical visibility to dangerous stopping-distance margins at highway speeds."
+    mandatory_guidance:
+      - "Advise low-beam headlight operation and reduced speeds with increased following distance."
+      - "Recommend delaying non-critical long-distance highway travel until solar heating burns off morning fog."
+      - "Warn against high-speed overtaking maneuvers in low-visibility corridors."
+    required_metrics_to_cite: ["weather_code", "relative_humidity_2m"]
+
+  - id: "SOP-TRV-003"
+    title: "High Wind Warning for High-Profile Vehicles & Bridges"
+    category: "daily_commute_travel"
+    severity: "MODERATE"
+    situational_override: false
+    applicable_activities: ["driving", "highway", "trucking", "rv", "towing", "caravan"]
+    conditions:
+      min_wind_speed_kmh: 45.0
+    rationale: "Sustained crosswinds over 45 km/h destabilize high-profile trucks, trailers, and vans on exposed bridges and open expressways."
+    mandatory_guidance:
+      - "Warn operators of high-profile vehicles, trailers, and RVs of lateral wind displacement."
+      - "Recommend firm two-handed steering, reduced highway speeds, and avoiding open bridge crossings during peak gusts."
+    required_metrics_to_cite: ["wind_speed_10m", "wind_gusts_10m"]
+
+  # =========================================================================
+  # CATEGORY 4: VULNERABLE POPULATIONS (CHILDREN, ELDERLY, PETS)
+  # =========================================================================
+  - id: "SOP-VUL-001"
+    title: "Thermal Stress Advisory for Toddlers, Young Children, and Elderly"
+    category: "vulnerable_populations"
+    severity: "HIGH"
+    situational_override: false
+    applicable_activities: ["park", "playground", "stroller_walk", "elderly_walk", "kids_outdoor_play", "family_outing"]
+    conditions:
+      min_temperature_c: 34.0
+    rationale: "Infants and seniors possess diminished thermoregulatory elasticity and dehydrate rapidly under heat loads above 34°C."
+    mandatory_guidance:
+      - "Advise against prolonged park or playground outings for infants, toddlers, and senior citizens during peak heat."
+      - "Restrict outdoor playtime to shaded, breezy areas for under 20 minutes with continuous hydration."
+      - "Recommend shifting playground trips to early morning hours (before 9:30 AM)."
+    required_metrics_to_cite: ["temperature_2m", "relative_humidity_2m"]
+
+  - id: "SOP-VUL-002"
+    title: "Pavement Surface Thermal Hazard for Canine / Pet Walking"
+    category: "vulnerable_populations"
+    severity: "MODERATE"
+    situational_override: false
+    applicable_activities: ["dog_walking", "pet_walk", "walking_dog", "pets"]
+    conditions:
+      min_temperature_c: 30.0
+    rationale: "Asphalt and pavement absorb direct radiation and reach 50-60°C when ambient air hits 30°C, burning canine paw pads within seconds."
+    mandatory_guidance:
+      - "Alert pet owners that dark asphalt and concrete surface temperatures far exceed ambient air temperatures."
+      - "Recommend applying the '7-second back-of-hand test' to pavement before walking pets."
+      - "Advise walking dogs strictly on natural grass or waiting for post-sunset cooling."
+    required_metrics_to_cite: ["temperature_2m"]
+
+  - id: "SOP-VUL-003"
+    title: "Cold Stress and Wind Chill Advisory for Young Children"
+    category: "vulnerable_populations"
+    severity: "MODERATE"
+    situational_override: false
+    applicable_activities: ["park", "playground", "kids_outdoor_play", "school_recess"]
+    conditions:
+      max_temperature_c: 10.0
+      min_wind_speed_kmh: 20.0
+    rationale: "Children have higher body surface-to-mass ratios and lose body heat rapidly when cold temperatures are paired with moderate winds."
+    mandatory_guidance:
+      - "Recommend multi-layered windproof thermal clothing, beanies, and insulated gloves for children playing outdoors."
+      - "Limit continuous outdoor exposure to under 45 minutes."
+    required_metrics_to_cite: ["temperature_2m", "wind_speed_10m"]
+
+  # =========================================================================
+  # CATEGORY 5: LEISURE & FUZZY NON-NUMERIC SCENARIOS
+  # =========================================================================
+  - id: "SOP-LEIS-001"
+    title: "Optimal Weather Guidelines for Picnics, Lawn Gatherings & Outdoor Brunches"
+    category: "leisure_and_events"
+    severity: "LOW"
+    situational_override: false
+    is_fuzzy_evaluation: true
+    applicable_activities: ["picnic", "lawn_gathering", "barbecue", "bbq", "outdoor_brunch", "garden_party", "outdoor_dining"]
+    conditions:
+      min_temperature_c: 18.0
+      max_temperature_c: 28.0
+      max_precipitation_probability: 25
+      max_wind_speed_kmh: 22.0
+      weather_codes: [0, 1, 2, 3] # Clear sky, mainly clear, partly cloudy, overcast
+    rationale: "Outdoor seated dining and picnics require mild thermal comfort (18-28°C), negligible rain probability (<25%), and gentle breezes (<22 km/h) to maintain food safety and physical comfort."
+    mandatory_guidance:
+      - "Confirm that current conditions are highly favorable for an outdoor picnic or lawn gathering."
+      - "Highlight pleasant temperature range and low likelihood of rain interruption."
+      - "Suggest standard sun protection (hats, light sunscreen) for extended seated exposure."
+    required_metrics_to_cite: ["temperature_2m", "precipitation_probability", "wind_speed_10m"]
+
+  - id: "SOP-LEIS-002"
+    title: "Unfavorable Environmental Conditions for Picnics and Outdoor Events"
+    category: "leisure_and_events"
+    severity: "MODERATE"
+    situational_override: false
+    is_fuzzy_evaluation: true
+    applicable_activities: ["picnic", "lawn_gathering", "barbecue", "bbq", "outdoor_brunch", "garden_party", "outdoor_dining"]
+    conditions:
+      # Triggered if rain prob >= 40% OR temp > 33C OR temp < 14C OR wind > 25 km/h
+      min_precipitation_probability: 40
+    rationale: "Elevated precipitation probability, high humidity, gusty winds, or thermal extremes spoil outdoor dining setups, wet seating areas, and blow away light picnic equipment."
+    mandatory_guidance:
+      - "Advise that current weather conditions are suboptimal for an open-air picnic or seated lawn gathering."
+      - "Point out specific discomfort factors (e.g. rain likelihood, damp ground, or disruptive wind)."
+      - "Recommend selecting a venue with covered pavilion shelters or shifting to an indoor dining alternative."
+    required_metrics_to_cite: ["precipitation_probability", "wind_speed_10m", "temperature_2m"]
