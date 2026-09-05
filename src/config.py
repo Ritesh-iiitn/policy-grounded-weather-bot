@@ -20,4 +20,4 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 DEFAULT_GEMINI_MODEL = os.getenv("LLM_MODEL", "gemini-3.6-flash")
 DEFAULT_OPENAI_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
-DEFAULT_GROQ_MODEL = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")
+DEFAULT_GROQ_MODEL = os.getenv("LLM_MODEL", "openai/gpt-oss-120b")

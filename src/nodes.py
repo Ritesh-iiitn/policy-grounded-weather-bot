@@ -162,6 +162,15 @@ REQUIRED RESPONSE STRUCTURE:
 
             response = llm.invoke(prompt)
             final_text = response.content if hasattr(response, "content") else str(response)
+            
+            # Guarantee SOP ID and severity citation in final text
+            if selected_sop['id'] not in final_text:
+                header = (
+                    f"### **[{selected_sop.get('severity', 'ADVISORY')} SEVERITY]** Safety Advisory for {activity.capitalize()} in {full_loc_str}\n\n"
+                    f"**Governing Policy**: `{selected_sop['id']}` — *{selected_sop['title']}*\n\n"
+                )
+                final_text = header + final_text
+                
             return {"final_answer": final_text, "execution_status": "SUCCESS"}
         except Exception:
             pass
