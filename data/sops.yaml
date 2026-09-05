@@ -85,6 +85,24 @@ policies:
       - "Prohibit sheltering under isolated tall trees or open metal canopies."
     required_metrics_to_cite: ["weather_code", "precipitation"]
 
+  - id: "SOP-EX-005"
+    title: "Standard Operational Clearance for Outdoor Sports & Exercise"
+    category: "outdoor_sports_exercise"
+    severity: "LOW"
+    situational_override: false
+    applicable_activities: ["cycling", "running", "jogging", "biking", "bike", "bicycle", "marathon", "outdoor_workout", "exercise", "hiking", "two-wheeler"]
+    conditions:
+      max_wind_speed_kmh: 39.9
+      max_temperature_c: 37.9
+      max_precipitation_mm: 14.9
+      max_uv_index: 7.9
+    rationale: "Ambient meteorological conditions are within nominal safe operating parameters for outdoor exercise and non-motorized/two-wheeler transport."
+    mandatory_guidance:
+      - "Confirm that current weather parameters (wind, temperature, UV, precipitation) are within safe baseline operating limits."
+      - "Advise standard hydration and observation of routine traffic and personal safety practices."
+      - "Continue to monitor local forecasts if planning extended multi-hour outdoor sessions."
+    required_metrics_to_cite: ["temperature_2m", "wind_speed_10m"]
+
   # =========================================================================
   # CATEGORY 3: DAILY COMMUTE & TRAVEL
   # =========================================================================
@@ -132,6 +150,22 @@ policies:
       - "Warn operators of high-profile vehicles, trailers, and RVs of lateral wind displacement."
       - "Recommend firm two-handed steering, reduced highway speeds, and avoiding open bridge crossings during peak gusts."
     required_metrics_to_cite: ["wind_speed_10m", "wind_gusts_10m"]
+
+  - id: "SOP-TRV-004"
+    title: "Standard Travel & Commute Clearance"
+    category: "daily_commute_travel"
+    severity: "LOW"
+    situational_override: false
+    applicable_activities: ["travel", "commute", "driving", "transit", "road_trip", "office_commute"]
+    conditions:
+      max_wind_speed_kmh: 44.9
+      max_precipitation_mm: 14.9
+      max_precipitation_probability: 69
+    rationale: "Highway visibility, wind dynamics, and roadway friction are within nominal transit limits."
+    mandatory_guidance:
+      - "Confirm nominal roadway transit conditions without major weather impediments."
+      - "Observe routine traffic rules and standard vehicle safety protocols."
+    required_metrics_to_cite: ["temperature_2m", "wind_speed_10m"]
 
   # =========================================================================
   # CATEGORY 4: VULNERABLE POPULATIONS (CHILDREN, ELDERLY, PETS)
