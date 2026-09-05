@@ -9,7 +9,7 @@ class WeatherClient:
     def geocode(self, query: str) -> Optional[Dict[str, Any]]:
         """
         Geocodes a location query to lat/lon using Open-Meteo Geocoding API.
-        Returns None if location is not found or API fails.
+        Returns None if location is not found or Api fails.
         """
         if not query or not query.strip():
             return None
