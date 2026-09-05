@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+from pathlib import Path
 from typing import Dict, Any, List, Tuple
 from unittest.mock import patch
 from src.graph import graph
@@ -132,14 +133,68 @@ def run_evaluation_suite():
             "id": case["id"],
             "name": case["name"],
             "category": case["category"],
+            "query": case["input_query"],
             "passed": passed,
             "status": result.get("execution_status"),
-            "sop_id": result.get("selected_sop", {}).get("id") if result.get("selected_sop") else None
+            "sop_id": result.get("selected_sop", {}).get("id") if result.get("selected_sop") else None,
+            "logs": logs,
+            "final_answer": result.get("final_answer", "")
         })
 
     print("\n" + "=" * 80)
-    print(f"EVALUATION SUMMARY: {passed_cases}/{total_cases} Passed ({(passed_cases/total_cases)*100:.1f}%)")
+    pass_pct = (passed_cases / total_cases) * 100
+    print(f"EVALUATION SUMMARY: {passed_cases}/{total_cases} Passed ({pass_pct:.1f}%)")
     print("=" * 80)
+
+    # -------------------------------------------------------------------------
+    # Save Structured Results to JSON and Markdown
+    # -------------------------------------------------------------------------
+    from datetime import datetime
+    eval_dir = Path(__file__).resolve().parent
+    timestamp_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # 1. Export JSON Report
+    json_report = {
+        "timestamp": timestamp_str,
+        "total_cases": total_cases,
+        "passed_cases": passed_cases,
+        "pass_percentage": f"{pass_pct:.1f}%",
+        "all_passed": passed_cases == total_cases,
+        "cases": results_summary
+    }
+    json_path = eval_dir / "eval_results.json"
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(json_report, f, indent=2)
+    print(f"\n📊 JSON Results Saved: {json_path}")
+
+    # 2. Export Markdown Report
+    md_lines = [
+        "# 🧪 Evaluation Test Suite Report",
+        f"\n**Execution Timestamp**: `{timestamp_str}`  ",
+        f"**Summary**: `{passed_cases}/{total_cases} Passed` (**{pass_pct:.1f}%**)\n",
+        "| Case ID | Category | Case Name | Matched SOP | Status | Result |",
+        "|:---:|:---|:---|:---:|:---:|:---:|"
+    ]
+    for r in results_summary:
+        res_icon = "✅ PASSED" if r["passed"] else "❌ FAILED"
+        sop_str = f"`{r['sop_id']}`" if r['sop_id'] else "None"
+        md_lines.append(f"| **{r['id']}** | `{r['category']}` | {r['name']} | {sop_str} | `{r['status']}` | {res_icon} |")
+
+    md_lines.append("\n## Detailed Case Logs & Verification Criteria\n")
+    for r in results_summary:
+        md_lines.append(f"### [{r['id']}] {r['name']} (`{r['category']}`)")
+        md_lines.append(f"- **Input Query**: *\"{r['query']}\"*")
+        md_lines.append(f"- **Execution Status**: `{r['status']}`")
+        md_lines.append(f"- **Matched SOP**: `{r['sop_id']}`")
+        md_lines.append("- **Verification Assertions**:")
+        for l in r.get("logs", []):
+            md_lines.append(f"  - {l}")
+        md_lines.append(f"- **Generated Response Snippet**:\n```\n{r.get('final_answer', '')[:300]}...\n```\n")
+
+    md_path = eval_dir / "eval_results.md"
+    with open(md_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(md_lines))
+    print(f"📄 Markdown Report Saved: {md_path}")
 
     return passed_cases == total_cases
 
