@@ -16,6 +16,8 @@ FORECAST_API_URL = "https://api.open-meteo.com/v1/forecast"
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini").lower()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 DEFAULT_GEMINI_MODEL = os.getenv("LLM_MODEL", "gemini-3.6-flash")
 DEFAULT_OPENAI_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
+DEFAULT_GROQ_MODEL = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")

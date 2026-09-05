@@ -1,22 +1,54 @@
 import os
 import re
 from typing import Optional, Dict, Any, List
-from src.config import GEMINI_API_KEY, OPENAI_API_KEY, DEFAULT_GEMINI_MODEL, DEFAULT_OPENAI_MODEL, LLM_PROVIDER
+from src.config import (
+    GEMINI_API_KEY, 
+    OPENAI_API_KEY, 
+    GROQ_API_KEY, 
+    DEFAULT_GEMINI_MODEL, 
+    DEFAULT_OPENAI_MODEL, 
+    DEFAULT_GROQ_MODEL, 
+    LLM_PROVIDER
+)
 from src.state import ExtractedEntities
 
 def get_llm():
     """Initializes the configured LLM instance with structured output support."""
-    if GEMINI_API_KEY:
+    # 1. Groq Provider
+    if LLM_PROVIDER == "groq" or (GROQ_API_KEY and LLM_PROVIDER not in ["gemini", "openai"]):
         try:
-            from langchain_google_genai import ChatGoogleGenerativeAI
-            return ChatGoogleGenerativeAI(
-                model=DEFAULT_GEMINI_MODEL,
-                google_api_key=GEMINI_API_KEY,
+            from langchain_groq import ChatGroq
+            return ChatGroq(
+                model=DEFAULT_GROQ_MODEL,
+                groq_api_key=GROQ_API_KEY,
                 temperature=0.0
             )
         except Exception:
-            pass
+            try:
+                from langchain_openai import ChatOpenAI
+                return ChatOpenAI(
+                    base_url="https://api.groq.com/openai/v1",
+                    api_key=GROQ_API_KEY,
+                    model=DEFAULT_GROQ_MODEL,
+                    temperature=0.0
+                )
+            except Exception:
+                pass
 
+    # 2. Gemini Provider
+    if LLM_PROVIDER == "gemini" or (GEMINI_API_KEY and not OPENAI_API_KEY and not GROQ_API_KEY):
+        if GEMINI_API_KEY:
+            try:
+                from langchain_google_genai import ChatGoogleGenerativeAI
+                return ChatGoogleGenerativeAI(
+                    model=DEFAULT_GEMINI_MODEL,
+                    google_api_key=GEMINI_API_KEY,
+                    temperature=0.0
+                )
+            except Exception:
+                pass
+
+    # 3. OpenAI Provider
     if OPENAI_API_KEY:
         try:
             from langchain_openai import ChatOpenAI
